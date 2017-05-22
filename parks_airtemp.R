@@ -27,6 +27,8 @@ for (i in 1:length(parks)){
   parks.climate.mean[[i]] <- prism_slice(parks[[i]], ls_prism_data()[files.keep,1])$data
 }
 
+
+
 # find annual summer averages
 summer_annual <- list()
 for (i in 1:length(parks)){
@@ -36,6 +38,12 @@ for (i in 1:length(parks)){
     summarise(summer_avg = mean(data))
 }
 
+# create data frame from list
+summer.df <- do.call(rbind, lapply(summer_annual, data.frame))
+summer.df$park <- rep(names(parks), each = length(1980:2014)-1) #1982 is missing
+
+# write df
+write.csv(summer.df, "data/parks_summer_meanairtemp.csv")
 
 # plot annual tmean data for each park on same plot
 # keep temperature scale of each plot
@@ -43,11 +51,13 @@ park.cols <- brewer.pal(8, name = 'Dark2')
 
 png('figures/parks_summer_meantemp_realtemp.png', height = 6, width = 4, units = 'in', res = 300)
 par(xpd = TRUE, mar = c(3,3,1,1), mgp = c(2,0.5,0), tcl = -0.3)
-plot(summer_annual[[1]]$summer_avg~summer_annual[[1]]$year, type = 'l', col = park.cols[1], 
-     lwd = 3, ylim = c(7,32), xlab = "Year", ylab = 'Summer Mean Temperature', bty = "L") 
+
+plot(summer_avg~year, type = 'l', col = park.cols[1], 
+     lwd = 3, ylim = c(7,32), xlab = "Year", ylab = 'Summer Mean Temperature', 
+     bty = "L", data = summer.df[summer.df$park == names(parks)[1],]) 
 
 for (i in 2:length(parks)){
-  points(summer_annual[[i]]$summer_avg~summer_annual[[i]]$year, type = 'l', col = park.cols[i], lwd = 3)
+  points(summer_avg~year, type = 'l', col = park.cols[i], lwd = 3, data = summer.df[summer.df$park == names(parks)[i],])
 }
 legend(x = 1980, y = 33, legend = names(parks), lwd = 3, 
        col = park.cols, ncol = 4, cex = 0.5)
