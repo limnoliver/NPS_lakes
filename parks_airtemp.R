@@ -10,10 +10,10 @@ get_prism_monthlys(type = 'tmean', years = 1980:2014, mon = c(7:9), keepZip = FA
 
 
 # create list of long/lats for parks
-parks <- list(acadia = c(-68.25, 44.36), voyageurs = c(-93.38, 48.60), 
-              rocky = c(-105.7, 40.4), marjory = c(-80.2, 25.7), 
-              amistad = c(-101, 29.5), sequoia = c(-118.5, 36.5), 
-              olympic = c(-123.6, 47.8), cuyahoga = c(-81.6, 41.3))
+parks <- list(Acadia = c(-68.25, 44.36), Voyageurs = c(-93.38, 48.60), 
+              Rocky = c(-105.7, 40.4), Marjory = c(-80.2, 25.7), 
+              Amistad = c(-101, 29.5), Sequoia = c(-118.5, 36.5), 
+              Olympic = c(-123.6, 47.8), Cuyahoga = c(-81.6, 41.3))
 
 
 # for monthly data, only use files with month attached to file name
@@ -41,7 +41,7 @@ for (i in 1:length(parks)){
 # keep temperature scale of each plot
 park.cols <- brewer.pal(8, name = 'Dark2')
 
-png('parks_summer_meantemp_realtemp.png', height = 6, width = 4, units = 'in', res = 300)
+png('figures/parks_summer_meantemp_realtemp.png', height = 6, width = 4, units = 'in', res = 300)
 par(xpd = TRUE, mar = c(3,3,1,1), mgp = c(2,0.5,0), tcl = -0.3)
 plot(summer_annual[[1]]$summer_avg~summer_annual[[1]]$year, type = 'l', col = park.cols[1], 
      lwd = 3, ylim = c(7,32), xlab = "Year", ylab = 'Summer Mean Temperature', bty = "L") 
