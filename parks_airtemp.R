@@ -2,6 +2,7 @@
 library(prism)
 library(httr)
 library(RColorBrewer)
+library(dplyr)
 set_config(config(ssl_verifypeer = 0L))
 
 # fetch prism mean air temp monthly data
@@ -18,16 +19,24 @@ parks <- list(acadia = c(-68.25, 44.36), voyageurs = c(-93.38, 48.60),
 # for monthly data, only use files with month attached to file name
 files.keep <- grep('_[[:digit:]]{6}_', ls_prism_data()$files)
 parks.climate.mean <- list()
+
 for (i in 1:length(parks)){
   parks.climate.mean[[i]] <- prism_slice(parks[[i]], ls_prism_data()[files.keep,1])$data
 }
 
-
-# pull out 2014 vals
-min.2014 <- c()
+# find monthly averages
+summer_annual <- list()
 for (i in 1:length(parks)){
-  min.2014[i] <- as.numeric(parks.climate.min[[i]][34,1])
+  summer_annual[[i]] <- parks.climate.mean[[i]] %>%
+    mutate(., year = format(date, "%Y")) %>%
+    group_by(year) %>%
+    summarise(summer_avg = mean(data))
 }
+
+test %>%
+  mutate(., year = format(date, "%Y")) %>%
+  group_by(year) %>%
+  summarise(summer_avg = mean(data))
 
 # plot annual tmean data for each park on same plot
 # keep temperature scale of each plot
