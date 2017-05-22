@@ -4,9 +4,9 @@ library(httr)
 library(RColorBrewer)
 set_config(config(ssl_verifypeer = 0L))
 
-# fetch prism mean air temp annual data
-get_prism_annual(type = 'tmin', years = 1980:2014, keepZip = FALSE)
-get_prism_annual(type = 'tmean', years = 1980:2014, keepZip = FALSE)
+# fetch prism mean air temp monthly data
+get_prism_monthlys(type = 'tmean', years = 1980:2014, mon = c(7:9), keepZip = FALSE)
+
 
 # create list of long/lats for parks
 parks <- list(acadia = c(-68.25, 44.36), voyageurs = c(-93.38, 48.60), 
@@ -15,20 +15,13 @@ parks <- list(acadia = c(-68.25, 44.36), voyageurs = c(-93.38, 48.60),
               olympic = c(-123.6, 47.8), cuyahoga = c(-81.6, 41.3))
 
 # extract climate data for each park location
-parks.climate.min <- list()
-for (i in 1:length(parks)){
-  park.climate.min[[i]] <- prism_slice(parks[[i]], ls_prism_data()[35:68,1])$data
-}
-
+# for monthly data, only use files with month attached to file name
+files.keep <- grep('_[[:digit:]]{6}_', ls_prism_data()$files)
 parks.climate.mean <- list()
 for (i in 1:length(parks)){
-  parks.climate.mean[[i]] <- prism_slice(parks[[i]], ls_prism_data()[1:34,1])$data
+  parks.climate.mean[[i]] <- prism_slice(parks[[i]], ls_prism_data()[files.keep,1])$data
 }
 
-park.climate.relative <- park.climate
-for (i in 1:length(parks)){
-  park.climate.relative[[i]]$data_rel <- park.climate.relative[[i]]$data - mean(park.climate.relative[[i]]$data)
-}
 
 # pull out 2014 vals
 min.2014 <- c()
