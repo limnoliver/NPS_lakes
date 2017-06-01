@@ -28,7 +28,7 @@ for (i in 1:length(parks)){
 
 # create data frame from list
 annual.df <- do.call(rbind, lapply(parks.climate.mean, data.frame))
-annual.df$park <- rep(names(parks), each = length(1980:2014)-1) #1981 is missing
+annual.df$park <- rep(names(parks), each = length(1980:2015)-1) #1981 is missing
 
 # write df
 write.csv(annual.df, "data/parks_annual_meanairtemp.csv")
