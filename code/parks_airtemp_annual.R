@@ -6,7 +6,7 @@ library(dplyr)
 set_config(config(ssl_verifypeer = 0L))
 
 # fetch prism mean air temp annual data
-get_prism_annual(type = 'tmean', years = 1980:2014, keepZip = FALSE)
+get_prism_annual(type = 'tmean', years = 1980:2016, keepZip = FALSE)
 
 # create list of long/lats for parks
 parks <- list(ACDA = c(-68.25, 44.36), VOYA = c(-93.38, 48.60), 
@@ -28,7 +28,7 @@ for (i in 1:length(parks)){
 
 # create data frame from list
 annual.df <- do.call(rbind, lapply(parks.climate.mean, data.frame))
-annual.df$park <- rep(names(parks), each = length(1980:2014)-1) #1982 is missing
+annual.df$park <- rep(names(parks), each = length(1980:2014)-1) #1981 is missing
 
 # write df
 write.csv(annual.df, "data/parks_annual_meanairtemp.csv")
