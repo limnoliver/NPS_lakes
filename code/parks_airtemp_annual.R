@@ -10,10 +10,9 @@ get_prism_monthlys(type = 'tmean', years = 1980:2014, mon = c(7:9), keepZip = FA
 
 
 # create list of long/lats for parks
-parks <- list(Acadia = c(-68.25, 44.36), Voyageurs = c(-93.38, 48.60), 
-              Rocky = c(-105.7, 40.4), Marjory = c(-80.2, 25.7), 
-              Amistad = c(-101, 29.5), Sequoia = c(-118.5, 36.5), 
-              Olympic = c(-123.6, 47.8), Cuyahoga = c(-81.6, 41.3))
+parks <- list(ACDA = c(-68.25, 44.36), VOYA = c(-93.38, 48.60), 
+              ROMO = c(-105.7, 40.4), AMIS = c(-101, 29.5), SEKI = c(-118.5, 36.5), 
+              OLYM = c(-123.6, 47.8))
 
 
 # for monthly data, only use files with month attached to file name
@@ -26,7 +25,6 @@ parks.climate.mean <- list()
 for (i in 1:length(parks)){
   parks.climate.mean[[i]] <- prism_slice(parks[[i]], ls_prism_data()[files.keep,1])$data
 }
-
 
 
 # find annual summer averages
@@ -63,4 +61,6 @@ legend(x = 1980, y = 33, legend = names(parks), lwd = 3,
        col = park.cols, ncol = 4, cex = 0.5)
 
 dev.off()
+
+
 
