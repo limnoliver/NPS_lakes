@@ -7,23 +7,22 @@ library(dplyr)
 library(scales)
 library(grid)
 
-setwd("~/Wisconsin/BassWalleye/trends/Future projections fish/Figures")
 
 ##############################
 #plot bass and walleye relationship to GDD together on the same figure
-gdd=read.csv("partial_plot_wae_GDD_median_quartiles.csv",header=T)
-gdd.bass=read.csv("partial_plot_lmb_GDD_median_quartiles2.csv", header=T)
+gdd=read.csv("data/partial_plot_wae_GDD_median_quartiles.csv",header=T)
+gdd.bass=read.csv("data/partial_plot_lmb_GDD_median_quartiles2.csv", header=T)
 gdd.bass$Species="LMB"
 gdd$Species="Walleye"
 colnames(gdd)[1]="GDD"
 colnames(gdd.bass)[1]="GDD"
 gdd.bass=select(gdd.bass, -fifth, -ninetyfifth)
-gdd.both=rbind(gdd, gdd.bass)
+gdd.both=rbind(gdd, gdd.hab)
 
 text.data=data.frame(x=c(2250,2900),
                      y=c(.65, .95),
-                     Species=c("Walleye", "LMB"),
-                     Species.name=c("Walleye", "Largemouth Bass"))
+                     Species=c("Walleye", "HAB"),
+                     Species.name=c("Walleye", "Harmful Algal Bloom"))
 
 
 windows()
@@ -46,3 +45,21 @@ z4=z4+geom_text(data=text.data, aes(x, y, label=Species.name, colour=Species), s
 print(z4)
 ggsave('GDDeffect_bass_walleye.tiff', height=80, width=80, units="mm", dpi=300)
 ###########################################################
+
+# generate random data for hypothetical algal biomass data
+gdd.hab <- data.frame(GDD = gdd$GDD,
+                      median = NA, 
+                      twentyfifth = NA, 
+                      seventyfifth = NA,
+                      Species = 'HAB')
+stand.x <- scale(gdd.hab$GDD)
+seq.ran <- 
+
+for (i in seq(from = 1, to = nrow(gdd.hab), by = 1)){
+  n <- sample(1:5, 1)
+  sample.b <- rnorm(100, mean = 2, sd = 1)
+  y <- 1/(1+exp(-1*sample.b*stand.x[i]))
+  gdd.hab$median[i] <- median(y)
+  gdd.hab$twentyfifth[i] <- gdd.hab$median[i] - rnorm(1, .2, .05)
+  gdd.hab$seventyfifth[i] <- gdd.hab$median[i] + rnorm(1, .2, .05)
+}
